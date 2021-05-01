@@ -33,8 +33,7 @@ try {
 	Field minecraftField = Class.forName("net.minecraft.client.Minecraft").getDeclaredField("a");
 	minecraftField.setAccessible(true);
 	 
-	Object increase = Class.forName("aby").getConstructors()[0].newInstance("Increase Tickrate", 50);
-	Object decrease = Class.forName("aby").getConstructors()[0].newInstance("Decrease Tickrate", 50);
+	Object keybind = Class.forName("aby").getConstructors()[0].newInstance("Test Keybind", 50);
 	
 	Field gameOptionsField = Class.forName("net.minecraft.client.Minecraft").getField("A");
 	gameOptionsField.setAccessible(true);
@@ -43,9 +42,8 @@ try {
 	Object gameOptions = gameOptionsField.get(minecraftField.get(null));
 	
 	Object[] keybindsArray = (Object[]) keybindsField.get(gameOptions);
-	Object[] newKeybindsArray = new Object[keybindsArray.length + 2];
+	Object[] newKeybindsArray = new Object[keybindsArray.length + 1];
 	System.arraycopy(keybindsArray, 0, newKeybindsArray, 0, keybindsArray.length);
-	newKeybindsArray[newKeybindsArray.length - 2] = increase;
 	newKeybindsArray[newKeybindsArray.length - 1] = decrease;
 	keybindsField.set(gameOptions, newKeybindsArray);
 } catch (ClassNotFoundException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {

@@ -1,0 +1,57 @@
+// ========================= MCLoader Plugin =========================
+
+buildscript {
+    repositories {
+        maven { url = "https://mgnet.work/repo" }
+    }
+    dependencies {
+        classpath 'de.pfannekuchen.mcloader:mcloader-gradle:1.0.0-SNAPSHOT'
+    }
+}
+
+plugins {
+    id 'java-library'
+}
+
+apply plugin: 'mcloader'
+
+// Export Location
+jar {
+	destinationDirectory = new File(".")
+	archiveFileName = "mod.jar"
+}
+
+
+// Agent-Main for MCLoader
+jar {
+    manifest {
+        attributes("Agent-Class": "de.pfannekuchen.mcloader.agent.JavaAgent",
+        "Can-Redefine-Classes": "true",
+        "Can-Retransform-Classes": "true",
+        "Premain-Class": "de.pfannekuchen.mcloader.agent.JavaAgent",
+        )
+    }
+    from {
+            configurations.include.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+}
+
+
+// Export Group
+configurations {
+	include
+}
+
+// ================== Dependencies & Repositories ==================
+
+repositories {
+	maven { url = "https://mgnet.work/repo" }
+}
+
+dependencies {
+	// MCLoader API
+    include group: 'de.pfannekuchen.mcloader', name: 'mcloader-api', version: '1.0.0-SNAPSHOT'
+    
+    // Include should also be Implementation
+    configurations.implementation.extendsFrom(configurations.include)
+}

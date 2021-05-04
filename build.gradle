@@ -15,12 +15,23 @@ plugins {
 
 apply plugin: 'mcloader'
 
-// Export Location
-jar {
-	destinationDirectory = new File(".")
-	archiveFileName = "mod.jar"
+// ================== Dependencies & Repositories ==================
+
+repositories {
+	maven { url = "https://mgnet.work/repo" }
+	maven { url = "https://repo.spongepowered.org/maven" }
 }
 
+configurations {
+	include
+}
+
+dependencies {
+	// MCLoader API
+    include group: 'de.pfannekuchen.mcloader', name: 'mcloader-api', version: '1.0.0'
+    
+    configurations.implementation.extendsFrom(configurations.include)
+}
 
 // Agent-Main for MCLoader
 jar {
@@ -31,27 +42,13 @@ jar {
         "Premain-Class": "de.pfannekuchen.mcloader.agent.JavaAgent",
         )
     }
-    from {
-            configurations.include.collect { it.isDirectory() ? it : zipTree(it) }
-	}
-}
-
-
-// Export Group
-configurations {
-	include
-}
-
-// ================== Dependencies & Repositories ==================
-
-repositories {
-	maven { url = "https://mgnet.work/repo" }
-}
-
-dependencies {
-	// MCLoader API
-    include group: 'de.pfannekuchen.mcloader', name: 'mcloader-api', version: '1.0.0-SNAPSHOT'
-    
-    // Include should also be Implementation
-    configurations.implementation.extendsFrom(configurations.include)
+	from (configurations.include.collect { entry -> zipTree(entry) }) {
+        exclude 'META-INF/MANIFEST.MF'
+        exclude 'META-INF/*.SF'
+        exclude 'META-INF/*.DSA'
+        exclude 'META-INF/*.RSA'
+    }
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    destinationDirectory = new File(".")
+	archiveFileName = "mod.jar"
 }

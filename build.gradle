@@ -5,7 +5,7 @@ buildscript {
         maven { url = "https://mgnet.work/repo" }
     }
     dependencies {
-        classpath 'de.pfannekuchen.mcloader:mcloader-gradle:1.0.0-SNAPSHOT'
+        classpath 'de.pfannekuchen.mcloader:mcloader-gradle:1.0.0'
     }
 }
 

@@ -41,4 +41,14 @@ public class EntryPoint implements Mod {
 		return callbacks;
 	}
 	
+	/**
+	 * Crash the Game when clicking Multiplayer
+	 */
+	@Override
+	public LinkedHashMap<Triplet<Class<?>, String, String>, String> getRedirects(LinkedHashMap<Triplet<Class<?>, String, String>, String> methodredirects) throws Exception {
+		// Crash the Game whenever GuiMultiplayer(bnf).init(b).Keyboard#enableRepeatEvents() is being called.
+		methodredirects.put(Triplet.with(Class.forName("bnf"), "b", "org.lwjgl.input.Keyboard#enableRepeatEvents"), "de.pfannekuchen.examplemod+Crasher#crash()");
+		return methodredirects;
+	}
+	
 }

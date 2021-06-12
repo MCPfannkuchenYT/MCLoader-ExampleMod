@@ -1,0 +1,7 @@
+{
+    "package": "entry.",
+    "compatibilityLevel": "JAVA_8",
+    "mixins": [
+    	"ExampleMixin"
+    ]
+}

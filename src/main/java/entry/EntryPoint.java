@@ -1,11 +1,7 @@
 package entry;
 
 import java.lang.instrument.Instrumentation;
-import java.util.LinkedHashMap;
 
-import org.javatuples.Triplet;
-
-import de.pfannekuchen.examplemod.Keybind;
 import de.pfannekuchen.mcloader.Mod;
 
 /**
@@ -22,33 +18,6 @@ public class EntryPoint implements Mod {
 	@Override
 	public void onInitialization(String args, Instrumentation instrumentation) {
 		System.out.println("Hello from the Minecraft Console!"); // This Message will be printed in the Minecraft Console
-		try {
-			new Keybind("Example Keybinding", 0x22, "key.categories.misc");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Print a Message every Tick
-	 */
-	@Override
-	public LinkedHashMap<Triplet<Class<?>, String, Boolean>, Runnable> getCallbacks(LinkedHashMap<Triplet<Class<?>, String, Boolean>, Runnable> callbacks) throws Exception {
-		// Create a Callback everytime runTick(t) is being called in Minecraft(bib)
-		callbacks.put(Triplet.with(Class.forName("bib"), "t", true), () -> {
-			System.out.println("Hello from the Minecraft Tick!"); // Print a Message everytime the Method is being executed.
-		});
-		return callbacks;
-	}
-	
-	/**
-	 * Crash the Game when clicking Multiplayer
-	 */
-	@Override
-	public LinkedHashMap<Triplet<Class<?>, String, String>, String> getRedirects(LinkedHashMap<Triplet<Class<?>, String, String>, String> methodredirects) throws Exception {
-		// Crash the Game whenever GuiMultiplayer(bnf).init(b).Keyboard#enableRepeatEvents() is being called.
-		methodredirects.put(Triplet.with(Class.forName("bnf"), "b", "org.lwjgl.input.Keyboard#enableRepeatEvents"), "de.pfannekuchen.examplemod+Crasher#crash()");
-		return methodredirects;
 	}
 	
 }

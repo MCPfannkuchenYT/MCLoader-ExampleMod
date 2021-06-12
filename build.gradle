@@ -1,50 +1,37 @@
 // ========================= MCLoader Plugin =========================
-
-buildscript {
-    repositories {
-        maven { url = "https://mgnet.work/repo" }
-    }
-    dependencies {
-        classpath 'de.pfannekuchen.mcloader:mcloader-gradle:1.1.0'
-    }
-}
-
 plugins {
     id 'java-library'
+    id "com.github.johnrengelman.shadow" version "7.0.0"
 }
 
-apply plugin: 'mcloader'
+jar {
+    manifest {
+        attributes("Agent-Class": "de.pfannekuchen.mcloader.agent.JavaAgent", "Can-Redefine-Classes": "true", "Can-Retransform-Classes": "true", "Premain-Class": "de.pfannekuchen.mcloader.agent.JavaAgent")
+    }
+}
 
 // ================== Dependencies & Repositories ==================
 
 repositories {
 	maven { url = "https://mgnet.work/repo" }
-}
-
-configurations {
-	include
+	maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
 }
 
 dependencies {
-	// MCLoader API
-    include group: 'de.pfannekuchen.mcloader', name: 'mcloader-api', version: '1.1.0'
-    
-    configurations.implementation.extendsFrom(configurations.include)
+	implementation group: 'de.pfannekuchen', name: 'mcloader', version: '2.0.0'
+	compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.7.11-SNAPSHOT'
+	compileOnly (group: 'net.minecraft', name: 'launchwrapper', version: '1.11') {
+		exclude module: 'lwjgl'
+	}
 }
 
-// Agent-Main for MCLoader
-jar {
-    manifest {
-        attributes("Agent-Class": "de.pfannekuchen.mcloader.agent.JavaAgent",
-        "Can-Redefine-Classes": "true",
-        "Can-Retransform-Classes": "true",
-        "Premain-Class": "de.pfannekuchen.mcloader.agent.JavaAgent",
-        )
-    }
-	from (configurations.include.collect { entry -> zipTree(entry) }) {
-        exclude 'META-INF/MANIFEST.MF'
-    }
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
-    destinationDirectory = new File(".")
-	archiveFileName = "mod.jar"
+// ================= Task Sorting =====================
+
+project.getAllTasks(true).each { key, val -> 
+	val.each {
+		it.group = null
+	}	
 }
+tasks.getByName("shadowJar").group = "mcloader"
+tasks.getByName("javadoc").group = "mcloader"
+build.dependsOn shadowJar

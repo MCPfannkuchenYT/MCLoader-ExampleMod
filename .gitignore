@@ -1,0 +1,15 @@
+# Ignore Gradle related files
+.gradle/
+build/
+
+# Ignore Eclipse output folders
+bin/
+
+# Ignore Eclipse Project Files
+.settings/
+.classpath
+.project
+
+# Ignore Project specific Files
+run/
+*.launch

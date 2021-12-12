@@ -1,0 +1,77 @@
+/**
+ * List of Plugins that Gradle will apply in order for MCLoader to work.
+ * This block has to be the first block in the code and shall not be changed.
+ */
+plugins {
+	/**
+	 * Add the MCLoader Plugin downloaded from any repositories in the settings.gradle.
+	 * Note: The version Tag is option and can be removed. It is just here in order to make developing locally work, since it is necessary to specify a version when
+	 * downloading from a local maven repository [aka mavenLocal()]. 
+	 * This Plugin prepares the second block in this file [mcloader] as well the 
+	 * entire minecraft development environment.
+	 */
+	id 'mcloader' version '1.0.0-SNAPSHOT'
+}
+
+/**
+ * This MCLoader Block is the configuration for your MCLoader Mod. In here you can change java properties
+ * such as id, version and group. But also additional properties that will be displayed to the User. These
+ * additional properties would be name, description, source and website. Lastly the MC Version has to be specified in order to
+ * download the game files.
+ */
+mcloader {
+	/**
+	 * A modid is a unique identifier of your mod. It does not have a use yet, but will be used internally.
+	 * The modid can only contain lowercase letters or numbers but may not start with a number. Spaces and Dashes are not allowed!
+	 */
+	id = 'examplemod'
+	
+	/**
+	 * The version of your mod is a very important property, therefore it is also important that you follow SemVer.
+	 * Here is a small breakdown of SemVer:
+	 * [a,b]MAJOR.MINOR.PATCH[-SNAPSHOT].
+	 * a,b is used to mark alpha and beta versions. These versions are incomplete and not ready for real use, because a lot of issues may occur.
+	 * The MAJOR Integer represents major updates in which the Code has been fundamentally changed or a lot of new features have been introduced.
+	 * The MINOR Integer represents smaller updates in which the code is mostly the same but small parts of the code have been reworked or new code was added.
+	 * The PATCH Integer represents minimal updates where critical bugs are being fixed or small patches are being done. Hotfixes are also included.
+	 * -SNAPSHOT can be put to the end of a version to signalize that the version is nearly finished but still unstable. These Versions should be playtested and then released.
+	 */
+	version = 'a1.0.0-SNAPSHOT'
+	
+	/**
+	 * The name of your mod can have all characters unlike the modid [id] and is being displayed next to the version in the main menu (not implemented yet).
+	 */
+	name = 'Example Mod'
+	
+	/**
+	 * The group of your mod is the package one level above the Main Class. Example: (x.y.z.mymod.MyMod would be x.y.z).
+	 * It should NOT contain the modid!
+	 */
+	group = 'de.pfannekuchen'
+	
+	/**
+	 * The description of your mod describes what the mod does in a short string. It is being displayed to the user while in the Main Menu.
+	 * Don't make this string to long!
+	 */
+	description = 'An Example Mod with MCLoader'
+	
+	/**
+	 * The source property defines a URL to the source code of this mod. It does not have to be a URL
+	 */
+	source = 'https://github.com/MCPfannkuchenYT/MCLoader-ExampleMod'
+	
+	/**
+	 * The website property defines a URL to the website of this mod. It does not have to be a URL
+	 */
+	website = 'https://mcloader.mgnet.work'
+	
+	/**
+	 * The authors property is an array of authors that worked on the mod. 
+	 */
+	authors = ['Pancake']
+	
+	/**
+	 * The MCVersion property defines the minecraft version of your plugin. Not all minecraft versions are uploaded onto the server though so make sure to check that your version is valid.
+	 */
+	mcversion = '1.12.2'
+}

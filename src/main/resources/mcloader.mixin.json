@@ -5,7 +5,7 @@
     "refmap": "refmap.json",
     "compatibilityLevel": "JAVA_8",
     "mixins": [
-
+		"MixinMinecraft"
     ], "client": [
 
 	]

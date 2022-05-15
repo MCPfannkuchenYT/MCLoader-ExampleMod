@@ -22,11 +22,18 @@ public class MCLoaderMixinClassLoader extends ClassLoader {
 	static IMixinTransformer transformer;
 	private HashMap<String, byte[]> classes = new HashMap<>();
 	private HashMap<String, URL> resources = new HashMap<>();
+	private URL[] classpath;
 	
 	public MCLoaderMixinClassLoader(File client, File libs) {
 		super(ClassLoader.getSystemClassLoader());
 		
 		try {
+			classpath = new URL[libs.listFiles().length + 1];
+			for (int i = 0; i < libs.listFiles().length; i++) {
+				classpath[i] = libs.listFiles()[i].toURI().toURL();
+			}
+			classpath[classpath.length-1] = client.toURI().toURL();
+			
 			loadZip(client);
 			for (File lib : libs.listFiles()) {
 				loadZip(lib);
@@ -92,6 +99,9 @@ public class MCLoaderMixinClassLoader extends ClassLoader {
 	
 	@Override
 	public Class<?> loadClass(String name) throws ClassNotFoundException {
+		if (name.startsWith("de.pfannekuchen")) {
+			System.out.println(name);
+		}
 		if (this.classes.containsKey(name)) {
 			byte[] clazz = this.classes.remove(name);
 			
@@ -109,6 +119,14 @@ public class MCLoaderMixinClassLoader extends ClassLoader {
 	@Override
 	public Class<?> findClass(String name) throws ClassNotFoundException {
 		return super.findClass(name);
+	}
+
+	public boolean isAvailable(String name) {
+		return classes.containsKey(name);
+	}
+
+	public URL[] getClassPath() {
+		return classpath;
 	}
 	
 }

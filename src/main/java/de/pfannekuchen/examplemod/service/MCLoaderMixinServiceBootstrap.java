@@ -16,7 +16,7 @@ public class MCLoaderMixinServiceBootstrap implements IMixinServiceBootstrap {
 
 	@Override
 	public void bootstrap() {
-		
+		MCLoaderMixinClassLoader.instance.hashCode();
 	}
 
 }

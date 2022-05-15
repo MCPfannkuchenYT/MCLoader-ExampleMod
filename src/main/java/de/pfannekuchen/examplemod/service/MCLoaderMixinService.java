@@ -21,7 +21,9 @@ import org.spongepowered.asm.service.ITransformerProvider;
 import org.spongepowered.asm.service.MixinServiceAbstract;
 import org.spongepowered.asm.transformers.MixinClassReader;
 
-public class MCLoaderMixinService extends MixinServiceAbstract implements IClassProvider, IClassBytecodeProvider {
+public class MCLoaderMixinService extends MixinServiceAbstract implements IClassProvider, IClassBytecodeProvider, IClassTracker, IMixinAuditTrail {
+	
+	ContainerHandleVirtual container = new ContainerHandleVirtual(this.getName());
 	
 	@Override 
 	public String getName() { 
@@ -65,7 +67,7 @@ public class MCLoaderMixinService extends MixinServiceAbstract implements IClass
 	
 	@Override
 	public IContainerHandle getPrimaryContainer() {
-		return new ContainerHandleVirtual(this.getName());
+		return container;
 	}
 	
 	@Override
@@ -90,17 +92,17 @@ public class MCLoaderMixinService extends MixinServiceAbstract implements IClass
 	
 	@Override
 	public IClassTracker getClassTracker() {
-		return null;
+		return this;
 	}
 	
 	@Override
 	public IMixinAuditTrail getAuditTrail() {
-		return null;
+		return this;
 	}
 	
 	@Override
 	public URL[] getClassPath() { 
-		return null; 
+		return MCLoaderMixinClassLoader.instance.getClassPath(); 
 	}
 	
 	@Override
@@ -122,6 +124,36 @@ public class MCLoaderMixinService extends MixinServiceAbstract implements IClass
 			MCLoaderMixinClassLoader.transformer = ((IMixinTransformerFactory) internal).createTransformer();
 		}
 		super.offer(internal);
+	}
+
+	@Override
+	public String getClassRestrictions(String name) {
+		return "";
+	}
+
+	@Override
+	public boolean isClassLoaded(String name) {
+		return !MCLoaderMixinClassLoader.instance.isAvailable(name);
+	}
+
+	@Override
+	public void registerInvalidClass(String name) {
+		System.out.println("Invalid Class: " + name);
+	}
+
+	@Override
+	public void onApply(String name, String mixin) {
+		System.out.println("Apply: " + mixin + " > " + name);
+	}
+
+	@Override
+	public void onGenerate(String name, String generator) {
+		System.out.println("Generate: " + generator + " > " + name);
+	}
+
+	@Override
+	public void onPostProcess(String name) {
+		System.out.println("Post Process: " + name);
 	}
 	
 }

@@ -3,6 +3,8 @@ package de.pfannekuchen.examplemod;
 import java.io.File;
 
 import org.spongepowered.asm.launch.MixinBootstrap;
+import org.spongepowered.asm.mixin.MixinEnvironment;
+import org.spongepowered.asm.mixin.MixinEnvironment.Side;
 import org.spongepowered.asm.mixin.Mixins;
 
 import de.pfannekuchen.examplemod.service.MCLoaderMixinClassLoader;
@@ -22,6 +24,8 @@ public class EntryPoint {
 		final MCLoaderMixinClassLoader classloader = new MCLoaderMixinClassLoader(new File("C:/Users/games/.gradle/mcloader/minecraft_1.12.2/client/client-deobf.jar"), new File("C:/Users/games/.gradle/mcloader/minecraft_1.12.2/libraries"));
 		MixinBootstrap.init();
 		Mixins.addConfiguration("mcloader.mixin.json");
+		MixinEnvironment.getCurrentEnvironment().setSide(Side.CLIENT);
+		MixinBootstrap.getPlatform().getLaunchTarget();
 		
 		System.out.println("ExampleMod was successfully loaded, starting minecraft now!");
 		Class.forName("net.minecraft.client.main.Main", true, classloader).getMethod("main", String[].class).invoke(null, new Object[] {args}); // Load Minecraft with custom classloader
